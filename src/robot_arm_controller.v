@@ -18,8 +18,20 @@ module robot_arm_controller
     input SW2,
     input SW3,
     input SW4,
-    output wire PMOD1
+    output wire PMOD1,
+
+    //Hex outputs
+    output S2_A,
+    output S2_B,
+    output S2_C,
+    output S2_D,
+    output S2_E,
+    output S2_F,
+    output S2_G,
+    output S1_G
 );
+
+
     //inputs for servo
     wire [31:0] control_x;
     wire [31:0] control_y;
@@ -46,6 +58,22 @@ module robot_arm_controller
 
         .spi_clk_dbg   (spi_clk_dbg),
         .rx_toggle_dbg (rx_toggle_dbg)
+    );
+
+
+
+
+    // Instantiate hex decoder x-axis
+    hex hex1 (
+        .pos  (x_pos),
+        .S2_A (S2_A),
+        .S2_B (S2_B),
+        .S2_C (S2_C),
+        .S2_D (S2_D),
+        .S2_E (S2_E),
+        .S2_F (S2_F),
+        .S2_G (S2_G),
+        .S1_G (S1_G)
     );
 
 

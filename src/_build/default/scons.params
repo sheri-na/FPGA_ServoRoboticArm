@@ -1,4 +1,4 @@
-timestamp: "20132220676"
+timestamp: "21013140948"
 arch: ICE40
 fpga_info {
   fpga_id: "ice40hx1k-vq100"
@@ -8,11 +8,6 @@ fpga_info {
     type: "hx1k"
     pack: "vq100"
   }
-}
-verbosity {
-  all: false
-  synth: false
-  pnr: false
 }
 environment {
   platform_id: "darwin-arm64"
@@ -27,4 +22,9 @@ apio_env_params {
   env_name: "default"
   board_id: "go-board"
   top_module: "robot_arm_controller"
+}
+target {
+  upload {
+    programmer_cmd: "iceprog -d d:1/1 $SOURCE"
+  }
 }
