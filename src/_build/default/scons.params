@@ -1,4 +1,4 @@
-timestamp: "22120608053"
+timestamp: "22121416052"
 arch: ICE40
 fpga_info {
   fpga_id: "ice40hx1k-vq100"
@@ -24,7 +24,8 @@ apio_env_params {
   top_module: "robot_arm_controller"
 }
 target {
-  upload {
-    programmer_cmd: "iceprog -d d:2/1 $SOURCE"
+  lint {
+    verilator_all: false
+    verilator_no_style: false
   }
 }
