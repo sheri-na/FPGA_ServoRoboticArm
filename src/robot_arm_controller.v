@@ -13,7 +13,7 @@ module robot_arm_controller
     input  wire PMOD9,
     output wire PMOD10, 
     
-    //servo output
+    //servo outputs
     input SW1,
     input SW2,
     input SW3,
@@ -65,15 +65,6 @@ module robot_arm_controller
 
 
 
-
-    hold_pos u_hold_pos (
-            .CLK   (CLK),
-            .SW1   (SW1),
-            .r_pos (x_pos),
-            .o_pos (held_pos)
-        );
-
-
     // Instantiate hex decoder x-axis
     hex hex1 (
         .pos  (x_pos),
@@ -87,9 +78,6 @@ module robot_arm_controller
         .S1_G (S1_G)
     );
 
-    wire [31:0] held_pos;
-
-    
 
 
 //max x 830, min x 228
