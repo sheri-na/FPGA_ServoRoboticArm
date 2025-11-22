@@ -1,6 +1,6 @@
 module hex
 (
-    input  [9:0] pos,  // 4-bit input (0–7)
+    input  [31:0] pos,  // 4-bit input (0–7)
     output S2_A,
     output S2_B,
     output S2_C,

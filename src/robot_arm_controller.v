@@ -36,11 +36,11 @@ module robot_arm_controller
 
 
     //inputs for servo
-    wire [9:0] control_x;
-    wire [9:0] control_y;
+    wire [31:0] control_x;
+    wire [31:0] control_y;
 
     // Outputs from joystick reader
-    wire [9:0] x_pos, y_pos;
+    wire [31:0] x_pos, y_pos;
     wire [7:0] buttons;
 
     wire spi_clk_dbg;
@@ -87,7 +87,7 @@ module robot_arm_controller
         .S1_G (S1_G)
     );
 
-    wire [9:0] held_pos;
+    wire [31:0] held_pos;
 
     
 
@@ -109,9 +109,10 @@ module robot_arm_controller
 
     //conversion from joystick position -> servo positioning
     //output = output_start + ((output_end - output_start) / (input_end - input_start)) * (input - input_start)
-    //assign control_x = 650 + ((2600 - 650) / (1023 - 0)) * (x_pos - 0);
-    assign control_x = 10'd653 * (x_pos - 10'd228);
-    assign control_y = 10'd653 * (y_pos - 10'd228);
+    assign control_x = 650 + ((2600 - 650) / (1023 - 0)) * (x_pos - 0);
+    assign control_y = 650 + ((2600 - 650) / (1023 - 0)) * (y_pos - 0);
+    //assign control_x = 10'd653 * (x_pos - 10'd228);
+    //assign control_y = 10'd653 * (y_pos - 10'd228);
 
 
 

@@ -1,6 +1,6 @@
 module servo_sg90 (
     input  CLK,
-    input  wire [9:0] control,
+    input  wire [31:0] control,
     output PMOD
 );
 
@@ -11,7 +11,7 @@ reg        servo_reg;
 //reg [31:0] control = 1500;   // µs pulse width
 reg        toggle  = 1;
 
-localparam [9:0] TICKS_PER_US = 25;
+localparam integer TICKS_PER_US = 25;
 
 //localparam integer MIN_US  = 650;
 //localparam integer MAX_US  = 2600;
@@ -29,7 +29,7 @@ localparam integer DEG45_US = 1137;   // approx: 120° = 2/3 of 180°
 										//    ≈ 1667 µs
 
 
-wire [9:0] high_ticks = control * TICKS_PER_US;
+wire [31:0] high_ticks = control * TICKS_PER_US;
 
 always @(posedge CLK)
 begin 

@@ -9,8 +9,8 @@ module joystick
     output wire SCK,         // PMOD4
 
     // Outputs
-    output wire [9:0] x_pos,     // Joystick X (0–1023)
-    output wire [9:0] y_pos,     // Joystick Y (0–1023)
+    output wire [31:0] x_pos,     // Joystick X (0–1023)
+    output wire [31:0] y_pos,     // Joystick Y (0–1023)
     output reg  [7:0] buttons,   // Button byte
 
     // Debug (optional)
@@ -164,7 +164,7 @@ module joystick
     end
 
     // Build 10-bit outputs
-    assign x_pos = {x_high[1:0], x_low};
-    assign y_pos = {y_high[1:0], y_low};
+    assign x_pos = {22'd0, x_high[1:0], x_low};
+    assign y_pos = {22'd0, y_high[1:0], y_low};
 
 endmodule

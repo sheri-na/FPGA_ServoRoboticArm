@@ -8,16 +8,15 @@ module hold_pos
 (
     input  wire       CLK,
     input  wire       SW1,        // active-high reset
-    input  wire [9:0] r_pos,      // raw joystick input (228..830)
-    output wire  [9:0] o_pos       // accumulated/clamped output position
+    input  wire [31:0] r_pos,      // raw joystick input (228..830)
+    output wire  [31:0] o_pos       // accumulated/clamped output position
 );
 
-reg  [9:0] min;
-reg  [9:0] max;
-reg  [9:0] current;
+reg  [31:0] min, max, current;
+
 
 reg [15:0] div = 0;
-reg [9:0] r_pos_sampled;
+reg [31:0] r_pos_sampled;
 
 always @(posedge CLK) begin
     div <= div + 1;
@@ -28,9 +27,9 @@ end
 
 always @(posedge CLK) begin
     if (SW1) begin
-        min <= 10'd529;
-        max <= 10'd529;
-        current <= 10'd529;
+        min <= 529;
+        max <= 529;
+        current <= 529;
     end
     else begin
         if (current > r_pos_sampled) 
