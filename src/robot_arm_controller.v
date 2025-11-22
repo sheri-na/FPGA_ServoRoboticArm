@@ -109,10 +109,9 @@ module robot_arm_controller
 
     //conversion from joystick position -> servo positioning
     //output = output_start + ((output_end - output_start) / (input_end - input_start)) * (input - input_start)
-    assign control_x = 650 + ((2600 - 650) / (1023 - 0)) * (x_pos - 0);
-    assign control_y = 650 + ((2600 - 650) / (1023 - 0)) * (y_pos - 0);
-    //assign control_x = 10'd653 * (x_pos - 10'd228);
-    //assign control_y = 10'd653 * (y_pos - 10'd228);
+    assign control_x = 650 + ((2600 - 650) / (830-228)) * (x_pos - 228);
+    assign control_y = 650 + ((2600 - 650) / (830-228)) * (y_pos - 228);
+
 
 
 
