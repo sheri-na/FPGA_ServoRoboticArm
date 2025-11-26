@@ -2,35 +2,35 @@ module robot_arm_controller
 (
     input  wire CLK,
 
-    output wire LED1,
-    output wire LED2,
-    output wire LED3,
-    output wire LED4,
-
-    // PMOD JSTK2 pins
+    //joystick pins
     output wire PMOD7,
     output wire PMOD8,
     input  wire PMOD9,
     output wire PMOD10, 
-    
-    //servo output
+    //LEDs
+    input LED1,
+    input LED2,
+    input LED3,
+    input LED4
+
+    //switch to choose joystick
     input SW1,
     input SW2,
     input SW3,
     input SW4,
+    //connection for pwm to servos
     output wire PMOD1,
+    output wire PMOD2,
+    output wire PMOD3,
+    output wire PMOD4
 
-    //Hex outputs
-    output S2_A,
-    output S2_B,
-    output S2_C,
-    output S2_D,
-    output S2_E,
-    output S2_F,
-    output S2_G,
-    output S1_G
 );
 
+    //led tells which switch is being controlled
+    assign LED1 = SW1;          
+    assign LED2 = SW2;
+    assign LED3 = SW3;          
+    assign LED4 = SW4;
 
     //inputs for servo
     wire [31:0] control_x;
@@ -63,62 +63,55 @@ module robot_arm_controller
 
 
 
-    // Instantiate hex decoder x-axis
-    hex hex1 (
-        .pos  (x_pos),
-        .S2_A (S2_A),
-        .S2_B (S2_B),
-        .S2_C (S2_C),
-        .S2_D (S2_D),
-        .S2_E (S2_E),
-        .S2_F (S2_F),
-        .S2_G (S2_G),
-        .S1_G (S1_G)
-    );
-
-
-
 //max x 830, min x 228
 
-    assign LED4 = (x_pos <  10'd230);
-    assign LED3 = (x_pos <  10'd228);
-    assign LED2 = (x_pos <  10'd226);
-    assign LED1 = (x_pos <  10'd224);
 
+    assign joystick_x = 650 + ((2600 - 650) / (830-228)) * (x_pos - 228);
+    assign joystick_y = 650 + ((2600 - 650) / (830-228)) * (y_pos - 228);
 
+    localparam integer SERVO_CENTER_US = 1500;   // 1.5 ms center pulse
 
+    wire center_btn = buttons[0];
 
+    reg [31:0] servo0_cmd = SERVO_CENTER_US;
+    reg [31:0] servo1_cmd = SERVO_CENTER_US;
 
-    // Debug LEDs x_axis
-    //assign LED4 = (x_pos >  10'd750);
-    //assign LED3 = (x_pos >= 10'd550 && x_pos < 10'd750);
-    //assign LED2 = (x_pos >= 10'd250 && x_pos < 10'd500);
-    //assign LED1 = (x_pos <= 10'd250);
-
-    // Debug LEDs y_axis
-    //assign LED1 = (y_pos >  10'd750);
-    //assign LED2 = (y_pos >= 10'd550 && y_pos < 10'd750);
-    //assign LED3 = (y_pos >= 10'd250 && y_pos < 10'd500);
-    //assign LED4 = (y_pos <= 10'd250);
-
-    //conversion to degrees.                //dead code
-    //assign x_degrees = (180/1023)*x_pos;
-    //assign y_degrees = (180/1023)*y_pos;
-
-    //conversion from joystick position -> servo positioning
-    //output = output_start + ((output_end - output_start) / (input_end - input_start)) * (input - input_start)
-    //control = 650 + ((2600 - 650) / (1023 - 0)) * (x_pos - 0)
-    assign control_x = 650 + ((2600 - 650) / (830-228)) * (x_pos - 228);
-    assign control_y = 650 + ((2600 - 650) / (830-228)) * (y_pos - 228);
-
+    always @(posedge CLK) begin
+        if (center_btn) begin
+            if (SW1 && !SW2)
+                servo0_cmd <= SERVO_CENTER_US;
+            else if (SW2 && !SW1)
+                servo1_cmd <= SERVO_CENTER_US;
+        end else begin
+            if (SW1)
+                servo0_cmd <= joy_x_us;
+            if (SW2)
+                servo1_cmd <= joy_y_us;
+        end
+    end
 
 
     // Instantiate the servo module x-axis
-    servo_sg90 servo1 (
+    servos servo1 (
         .CLK       (CLK),
-        .control    (control_x),
+        .control    (servo0_cmd),
         .PMOD1 (PMOD1)
     );
+    servo_sg90 servo0 (
+    .CLK     (CLK),
+    .control (servo1_cmd),
+    .PMOD    (PMOD2)
+);
+    servo_sg90 servo1 (
+        .CLK     (CLK),
+        .control (servo2_cmd),
+        .PMOD    (PMOD3)
+    );
+    servo_sg90 servo0 (
+    .CLK     (CLK),
+    .control (servo3_cmd),
+    .PMOD    (PMOD4)
+);
 
 
 endmodule
