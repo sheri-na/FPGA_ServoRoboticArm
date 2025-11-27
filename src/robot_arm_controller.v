@@ -75,6 +75,8 @@ module robot_arm_controller
 
     reg [31:0] servo0_cmd = SERVO_CENTER_US;
     reg [31:0] servo1_cmd = SERVO_CENTER_US;
+    reg [31:0] servo2_cmd = SERVO_CENTER_US;
+    reg [31:0] servo3_cmd = SERVO_CENTER_US;
 
     always @(posedge CLK) begin
         if (center_btn) begin
@@ -82,32 +84,40 @@ module robot_arm_controller
                 servo0_cmd <= SERVO_CENTER_US;
             else if (SW2 && !SW1)
                 servo1_cmd <= SERVO_CENTER_US;
+            else if (SW3 && !SW4)
+                servo2_cmd <= SERVO_CENTER_US;
+            else if (SW4 && !SW3)
+                servo3_cmd <= SERVO_CENTER_US;   
         end else begin
             if (SW1)
                 servo0_cmd <= joy_x_us;
             if (SW2)
                 servo1_cmd <= joy_y_us;
+            if (SW3)
+                servo2_cmd <= joy_x_us;
+            if (SW4)
+                servo3_cmd <= joy_y_us;
         end
     end
 
 
     // Instantiate the servo module x-axis
-    servos servo1 (
+    servos servo0 (
         .CLK       (CLK),
         .control    (servo0_cmd),
         .PMOD1 (PMOD1)
     );
-    servo_sg90 servo0 (
+    servos servo1 (
     .CLK     (CLK),
     .control (servo1_cmd),
     .PMOD    (PMOD2)
 );
-    servo_sg90 servo1 (
+    servos servo2 (
         .CLK     (CLK),
         .control (servo2_cmd),
         .PMOD    (PMOD3)
     );
-    servo_sg90 servo0 (
+    servos servo3 (
     .CLK     (CLK),
     .control (servo3_cmd),
     .PMOD    (PMOD4)
