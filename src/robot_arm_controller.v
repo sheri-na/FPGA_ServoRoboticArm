@@ -8,10 +8,10 @@ module robot_arm_controller
     input  wire PMOD9,
     output wire PMOD10, 
     //LEDs
-    output LED1,
-    output LED2,
-    output LED3,
-    output LED4
+    output wire LED1,
+    output wire LED2,
+    output wire LED3,
+    output wire LED4
 
     //switch to choose joystick
     input SW1,
@@ -66,8 +66,8 @@ module robot_arm_controller
 //max x 830, min x 228
 
 
-    assign joy_x_us = 650 + ((2600 - 650) / (830-228)) * (x_pos - 228);
-    assign joy_y_us = 650 + ((2600 - 650) / (830-228)) * (y_pos - 228);
+    assign control_x = 650 + ((2600 - 650) / (830-228)) * (x_pos - 228);
+    assign control_y = 650 + ((2600 - 650) / (830-228)) * (y_pos - 228);
 
     localparam integer SERVO_CENTER_US = 1500;   // 1.5 ms center pulse
 
@@ -90,34 +90,34 @@ module robot_arm_controller
                 servo3_cmd <= SERVO_CENTER_US;   
         end else begin
             if (SW1)
-                servo0_cmd <= joy_x_us;
+                servo0_cmd <= control_x;
             if (SW2)
-                servo1_cmd <= joy_y_us;
+                servo1_cmd <= control_y;
             if (SW3)
-                servo2_cmd <= joy_x_us;
+                servo2_cmd <= control_x;
             if (SW4)
-                servo3_cmd <= joy_y_us;
+                servo3_cmd <= control_y;
         end
     end
 
 
     // Instantiate the servo module x-axis
-    servos servo0 (
+    servo servo0 (
     .CLK       (CLK),
     .control    (servo0_cmd),
     .PMOD (PMOD1)
     );
-    servos servo1 (
+    servo servo1 (
     .CLK     (CLK),
     .control (servo1_cmd),
     .PMOD    (PMOD2)
 );
-    servos servo2 (
+    servo servo2 (
     .CLK     (CLK),
     .control (servo2_cmd),
     .PMOD    (PMOD3)
     );
-    servos servo3 (
+    servo servo3 (
     .CLK     (CLK),
     .control (servo3_cmd),
     .PMOD    (PMOD4)
