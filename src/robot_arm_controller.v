@@ -11,7 +11,7 @@ module robot_arm_controller
     output wire LED1,
     output wire LED2,
     output wire LED3,
-    output wire LED4
+    output wire LED4,
 
     //switch to choose joystick
     input SW1,
