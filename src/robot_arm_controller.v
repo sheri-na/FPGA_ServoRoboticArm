@@ -38,7 +38,7 @@ module robot_arm_controller
 );
 
     // Joystick  
-    wire [31:0] x_pos;
+    wire [31:0] x_pos, y_pos;
     wire [7:0]  buttons;
     wire        spi_clk_dbg;
     wire        rx_toggle_dbg;
@@ -52,7 +52,10 @@ module robot_arm_controller
         .SCK       (PMOD10),
 
         .x_pos     (x_pos),
+        .y_pos     (y_pos),
         .buttons   (buttons)
+
+
     );
 
     // Hex decoder x-axis
@@ -70,9 +73,12 @@ module robot_arm_controller
 
 
     wire signed [31:0] raw_x;
+    wire signed [31:0] raw_y;
     reg  [31:0]        control_x;
+    reg  [31:0]        control_y;
 
     assign raw_x = 650 + ((2600 - 650) / (830 - 228)) * (x_pos - 228);
+    assign raw_y = 650 + ((2600 - 650) / (830 - 228)) * (y_pos - 228);
 
     
 
