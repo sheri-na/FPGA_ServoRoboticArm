@@ -1,0 +1,46 @@
+# Ignore build artifacts
+build/
+_build/
+out/
+bin/
+obj/
+dist/
+release/
+debug/
+results/
+
+# Compiled objects and binaries
+*.o
+*.obj
+*.a
+*.so
+*.dll
+*.exe
+*.elf
+*.hex
+*.bin
+*.map
+
+# FPGA tool outputs (Vivado / Xilinx)
+*.bit
+*.bitstream
+*.mcs
+*.sof
+*.pof
+*.rpt
+*.jou
+*.log
+*.wdb
+*.webtalk
+*.runs/
+*.ip_user_files/
+*.cache/
+*.hw/
+*.sim/
+
+# Quartus / Intel FPGA
+db/
+incremental_db/
+output_files/
+*.qws
+*.qpf
