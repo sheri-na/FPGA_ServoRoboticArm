@@ -60,23 +60,7 @@ module robot_arm_controller
     assign raw_x = 650 + ((2600 - 650) / (830 - 228)) * (x_pos - 228);
     assign raw_y = 650 + ((2600 - 650) / (830 - 228)) * (y_pos - 228);
 
-    always @(*) begin
-        // clamp X
-        if (raw_x < 1000)
-            control_x = 1000;
-        else if (raw_x > 2000)
-            control_x = 2000;
-        else
-            control_x = raw_x[31:0];
-
-        // clamp Y
-        if (raw_y < 1000)
-            control_y = 1000;
-        else if (raw_y > 2000)
-            control_y = 2000;
-        else
-            control_y = raw_y[31:0];
-    end
+    
 
     localparam integer SERVO_CENTER_US = 1500;   // 1.5 ms center pulse
 
@@ -129,19 +113,19 @@ module robot_arm_controller
         case (current_servo)
             2'd0: begin
                 // servo 1 active: use X axis (for example)
-                servo0_cmd <= control_x;
+                servo0_cmd <= raw_x;
             end
             2'd1: begin
                 // servo 2 active: use Y axis (for example)
-                servo1_cmd <= control_y;
+                servo1_cmd <= raw_y;
             end
             2'd2: begin
                 // servo 3 active: you can choose X or Y; here I use X again
-                servo2_cmd <= control_x;
+                servo2_cmd <= raw_x;
             end
             2'd3: begin
                 // servo 4 active: use Y axis again
-                servo3_cmd <= control_y;
+                servo3_cmd <= raw_y;
             end
             default: begin
                 // nothing
