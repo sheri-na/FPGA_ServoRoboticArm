@@ -10,12 +10,7 @@ module joystick
 
     // Outputs
     output wire [31:0] x_pos,     // Joystick X (0–1023)
-    output wire [31:0] y_pos,     // Joystick Y (0–1023)
-    output reg  [7:0] buttons,   // Button byte
-
-    // Debug (optional)
-    output wire spi_clk_dbg,
-    output reg  rx_toggle_dbg
+    output reg  [7:0] buttons   // Button byte
 );
 
 
@@ -35,19 +30,10 @@ module joystick
     assign MOSI = w_SPI_MOSI;
     assign SCK  = w_SPI_Clk;
 
-    assign spi_clk_dbg = w_SPI_Clk;
-
-    // Toggle LED on each received byte
-    always @(posedge CLK) begin
-        if (w_RX_DV)
-            rx_toggle_dbg <= ~rx_toggle_dbg;
-    end
 
     // Raw joystick bytes
     reg [7:0] x_low  = 0;
     reg [7:0] x_high = 0;
-    reg [7:0] y_low  = 0;
-    reg [7:0] y_high = 0;
 
     reg [2:0] r_RxIndex = 0;
 
@@ -133,8 +119,6 @@ module joystick
                     case (r_RxIndex)
                         3'd0: x_low   <= w_RX_Byte;
                         3'd1: x_high  <= w_RX_Byte;
-                        3'd2: y_low   <= w_RX_Byte;
-                        3'd3: y_high  <= w_RX_Byte;
                         3'd4: buttons <= w_RX_Byte;
                         default;
                     endcase
@@ -165,6 +149,5 @@ module joystick
 
     // Build 10-bit outputs
     assign x_pos = {22'd0, x_high[1:0], x_low};
-    assign y_pos = {22'd0, y_high[1:0], y_low};
 
 endmodule

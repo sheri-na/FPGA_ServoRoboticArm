@@ -14,7 +14,7 @@ module robot_arm_controller
     output wire LED3,    // shows servo 3 is selected
     output wire LED4,    // shows servo 4 is selected
 
-    // pushbuttons to select active servo
+    // pushbuttons 
     input  wire SW1,     // select servo 1
     input  wire SW2,     // select servo 2
     input  wire SW3,     // select servo 3
@@ -24,11 +24,21 @@ module robot_arm_controller
     output wire PMOD1,   // servo 1 signal
     output wire PMOD2,   // servo 2 signal
     output wire PMOD3,   // servo 3 signal
-    output wire PMOD4    // servo 4 signal
+    output wire PMOD4,    // servo 4 signal
+
+    // hex display
+    output S2_A,
+    output S2_B,
+    output S2_C,
+    output S2_D,
+    output S2_E,
+    output S2_F,
+    output S2_G,
+    output S1_G
 );
 
-    // ───────────── Joystick interface ─────────────
-    wire [31:0] x_pos, y_pos;
+    // Joystick  
+    wire [31:0] x_pos;
     wire [7:0]  buttons;
     wire        spi_clk_dbg;
     wire        rx_toggle_dbg;
@@ -42,23 +52,27 @@ module robot_arm_controller
         .SCK       (PMOD10),
 
         .x_pos     (x_pos),
-        .y_pos     (y_pos),
-        .buttons   (buttons),
-
-        .spi_clk_dbg   (spi_clk_dbg),
-        .rx_toggle_dbg (rx_toggle_dbg)
+        .buttons   (buttons)
     );
 
-    // ───────────── Map joystick positions to pulse width (µs) ─────────────
-    // x_pos, y_pos ~ 228..830  → pulse width ~ 1000..2000 us (clamped)
+    // Hex decoder x-axis
+    hex hex1 (
+        .pos  (raw_x[9:0]),
+        .S2_A (S2_A),
+        .S2_B (S2_B),
+        .S2_C (S2_C),
+        .S2_D (S2_D),
+        .S2_E (S2_E),
+        .S2_F (S2_F),
+        .S2_G (S2_G),
+        .S1_G (S1_G)
+    );
+
 
     wire signed [31:0] raw_x;
-    wire signed [31:0] raw_y;
     reg  [31:0]        control_x;
-    reg  [31:0]        control_y;
 
     assign raw_x = 650 + ((2600 - 650) / (830 - 228)) * (x_pos - 228);
-    assign raw_y = 650 + ((2600 - 650) / (830 - 228)) * (y_pos - 228);
 
     
 
@@ -103,7 +117,7 @@ module robot_arm_controller
     assign LED3 = (current_servo == 2'd2);
     assign LED4 = (current_servo == 2'd3);
 
-    // ───────────── Servo commands (only update selected one) ─────────────
+    // Servo commands
     reg [31:0] servo0_cmd = SERVO_CENTER_US;   // servo 1 (PMOD1)
     reg [31:0] servo1_cmd = SERVO_CENTER_US;   // servo 2 (PMOD2)
     reg [31:0] servo2_cmd = SERVO_CENTER_US;   // servo 3 (PMOD3)
@@ -112,29 +126,29 @@ module robot_arm_controller
     always @(posedge CLK) begin
         case (current_servo)
             2'd0: begin
-                // servo 1 active: use X axis (for example)
+                // servo 1 active
                 servo0_cmd <= raw_x;
             end
             2'd1: begin
-                // servo 2 active: use Y axis (for example)
-                servo1_cmd <= raw_y;
+                // servo 2 active
+                servo1_cmd <= raw_x;
             end
             2'd2: begin
-                // servo 3 active: you can choose X or Y; here I use X again
+                // servo 3 active
                 servo2_cmd <= raw_x;
             end
             2'd3: begin
-                // servo 4 active: use Y axis again
-                servo3_cmd <= raw_y;
+                // servo 4 active
+                servo3_cmd <= raw_x;
             end
             default: begin
                 // nothing
             end
         endcase
-        // non-selected servos keep their last cmd → they hold position
+        // non-selected servos keep their position
     end
 
-    // ───────────── Servo PWM generators ─────────────
+    // Servo PWM generators 
     servo servo0 (
         .CLK     (CLK),
         .control (servo0_cmd),
