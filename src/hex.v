@@ -22,25 +22,25 @@ reg S_G;
 //max x 830, min x 228
 always @(*) begin
     case (1'b1)
-        (pos <= 263): Hex = 4'd9;
-        (pos <= 296): Hex = 4'd8;
-        (pos <= 329): Hex = 4'd7;
-        (pos <= 362): Hex = 4'd6;
-        (pos <= 395): Hex = 4'd5;
-        (pos <= 428): Hex = 4'd4;
-        (pos <= 461): Hex = 4'd3;
-        (pos <= 494): Hex = 4'd2;
-        (pos <= 527): Hex = 4'd1;
-        (pos <= 560): Hex = 4'd0;
-        (pos <= 593): Hex = 4'd1;
-        (pos <= 626): Hex = 4'd2;
-        (pos <= 659): Hex = 4'd3;
-        (pos <= 692): Hex = 4'd4;
-        (pos <= 725): Hex = 4'd5;
-        (pos <= 758): Hex = 4'd6;
-        (pos <= 791): Hex = 4'd7;
-        (pos <= 824): Hex = 4'd8;
-        (pos <= 830): Hex = 4'd9;  
+        (pos <= 10'd263): Hex = 4'd9;
+        (pos <= 10'd296): Hex = 4'd8;
+        (pos <= 10'd329): Hex = 4'd7;
+        (pos <= 10'd362): Hex = 4'd6;
+        (pos <= 10'd395): Hex = 4'd5;
+        (pos <= 10'd428): Hex = 4'd4;
+        (pos <= 10'd461): Hex = 4'd3;
+        (pos <= 10'd494): Hex = 4'd2;
+        (pos <= 10'd527): Hex = 4'd1;
+        (pos <= 10'd560): Hex = 4'd0;
+        (pos <= 10'd593): Hex = 4'd1;
+        (pos <= 10'd626): Hex = 4'd2;
+        (pos <= 10'd659): Hex = 4'd3;
+        (pos <= 10'd692): Hex = 4'd4;
+        (pos <= 10'd725): Hex = 4'd5;
+        (pos <= 10'd758): Hex = 4'd6;
+        (pos <= 10'd791): Hex = 4'd7;
+        (pos <= 10'd824): Hex = 4'd8;
+        (pos <= 10'd830): Hex = 4'd9;  
 
         default:       Hex = 4'd15; // OUT OF RANGE
     endcase
@@ -74,6 +74,6 @@ assign S2_E = S_E;
 assign S2_F = S_F;
 assign S2_G = S_G;
 
-assign S1_G = (pos >= 529);
+assign S1_G = (pos >= 10'd529);
 
 endmodule

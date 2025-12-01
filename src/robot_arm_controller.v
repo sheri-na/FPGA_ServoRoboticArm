@@ -60,7 +60,7 @@ module robot_arm_controller
 
     // Hex decoder x-axis
     hex hex1 (
-        .pos  (raw_x[9:0]),
+        .pos  (x_pos[9:0]),
         .S2_A (S2_A),
         .S2_B (S2_B),
         .S2_C (S2_C),
