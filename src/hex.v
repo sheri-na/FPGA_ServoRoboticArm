@@ -1,6 +1,6 @@
 module hex
 (
-    input  [9:0] pos,  // 4-bit input (0–7)
+    input  [9:0] pos, 
     output S2_A,
     output S2_B,
     output S2_C,
@@ -30,7 +30,7 @@ always @(*) begin
         (pos <= 10'd428): Hex = 4'd4;
         (pos <= 10'd461): Hex = 4'd3;
         (pos <= 10'd494): Hex = 4'd2;
-        (pos <= 10'd527): Hex = 4'd1;
+        (pos <= 10'd520): Hex = 4'd1;
         (pos <= 10'd560): Hex = 4'd0;
         (pos <= 10'd593): Hex = 4'd1;
         (pos <= 10'd626): Hex = 4'd2;
@@ -74,6 +74,6 @@ assign S2_E = S_E;
 assign S2_F = S_F;
 assign S2_G = S_G;
 
-assign S1_G = (pos >= 10'd529);
+assign S1_G = (pos >= 10'd520);
 
 endmodule
